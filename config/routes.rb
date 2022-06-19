@@ -8,5 +8,12 @@ Rails.application.routes.draw do
   get  '/contact', to: 'static_pages#contact'
   
   # users
-  get '/signup',  to: 'users#new'
+  resources :users
+    #get '/users',  to: 'users#index'
+    #get '/users/:id', to: 'users#show'
+    get '/signup',  to: 'users#new'
+    #post '/users', to: 'users#create'
+    #get 'users/:id/edit', to: 'users#edit'
+    #patch 'users/:id', to: 'users#update'
+    #delete 'users/:id', to: 'users#destroy'
 end
