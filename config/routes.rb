@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  get 'sessions/new'
   root 'static_pages#home'
   
   # static_pages
@@ -13,7 +14,12 @@ Rails.application.routes.draw do
     #get '/users/:id', to: 'users#show'
     get '/signup',  to: 'users#new'
     #post '/users', to: 'users#create'
-    #get 'users/:id/edit', to: 'users#edit'
-    #patch 'users/:id', to: 'users#update'
-    #delete 'users/:id', to: 'users#destroy'
+    #get '/users/:id/edit', to: 'users#edit'
+    #patch '/users/:id', to: 'users#update'
+    #delete '/users/:id', to: 'users#destroy'
+    
+  # sessions
+  get    '/login',   to: 'sessions#new'
+  post   '/login',   to: 'sessions#create'
+  delete '/logout',  to: 'sessions#destroy'
 end
