@@ -39,7 +39,7 @@ class User < ApplicationRecord
     return false if remember_digest.nil?
     # bcryptのsecure_passwordのソースコード
     # BCrypt::Password.new(password_digest) == unencrypted_password
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+    BCrypt::Password.new(self.remember_digest).is_password?(remember_token)
   end
   
   # ユーザーのログイン情報を破棄する
