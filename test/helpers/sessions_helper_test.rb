@@ -4,7 +4,9 @@ class SessionsHelperTest < ActionView::TestCase
   
   def setup
     @user = users(:michael)
+    #@other_user = users(:archer)
     remember(@user)
+    #remember(@other_user)
   end
   
   test "current_user returns right user when session is nil" do 
