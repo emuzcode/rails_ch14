@@ -32,4 +32,13 @@ Rails.application.routes.draw do
     
   # microposts
   resources :microposts,          only: [:create, :destroy]
+  
+  # relationships
+  resources :users do
+    member do
+      get :following, :followers
+      # ex. /users/1/following や /users/1/followers
+    end
+  end
+  resources :relationships,       only: [:create, :destroy]
 end

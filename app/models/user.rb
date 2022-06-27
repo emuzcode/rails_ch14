@@ -2,6 +2,17 @@ class User < ApplicationRecord
   # microposts 
   has_many :microposts, dependent: :destroy
   
+  # relationship
+  has_many :active_relationships, class_name:  "Relationship",
+                                  foreign_key: "follower_id",
+                                  dependent:   :destroy
+  has_many :following, through: :active_relationships, source: :followed
+  
+  has_many :passive_relationships, class_name:  "Relationship",
+                                   foreign_key: "followed_id",
+                                   dependent:   :destroy
+  has_many :followers, through: :passive_relationships, source: :follower
+  
   # 「仮想の」属性を作成
   attr_accessor :remember_token, :activation_token, :reset_token
   
@@ -92,8 +103,40 @@ class User < ApplicationRecord
   
   # 試作feedの定義
   # 完全な実装は次章の「ユーザーをフォローする」を参照
+  #def feed
+    #Micropost.where("user_id = ?", id)
+  #end
+  # ユーザーのステータスフィードを返す
+  #def feed
+    #Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
+    #Micropost.where("user_id IN (?) OR user_id = ?", following.map(&:id), id)
+  #end
+  
+  #def feed
+    #Micropost.where("user_id IN (:following_ids) OR user_id = :user_id",
+     #following_ids: following_ids, user_id: id)
+  #end
+  
   def feed
-    Micropost.where("user_id = ?", id)
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
+  end
+  
+  # ユーザーをフォローする
+  def follow(other_user)
+    following << other_user
+  end
+
+  # ユーザーをフォロー解除する
+  def unfollow(other_user)
+    active_relationships.find_by(followed_id: other_user.id).destroy
+  end
+
+  # 現在のユーザーがフォローしてたらtrueを返す
+  def following?(other_user)
+    following.include?(other_user)
   end
   
   private
